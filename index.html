@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#020617">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Dominators Cup RL</title>
@@ -1279,5 +1281,14 @@
     renderAssistente();
     renderAdm();
   </script>
+<script>
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js")
+    .then(() => console.log("PWA ativo"))
+    .catch(err => console.log(err));
+}
+
+</script>
 </body>
 </html>
