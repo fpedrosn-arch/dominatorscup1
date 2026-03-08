@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Dominators Cup RL</title>
+  <meta name="theme-color" content="#0a1020" />
+  <style>
+    :root{
+      --bg:#07101f;
+      --bg2:#0c1830;
+      --card:#111d38;
+      --card2:#162648;
+      --line:rgba(255,255,255,.10);
+      --text:#eef4ff;
+      --muted:#a9b8d6;
+      --primary:#6ea8ff;
+      --primary2:#8b5cf6;
+      --success:#16c784;
+      --danger:#ff5f6d;
+      --warning:#fbbf24;
+      --shadow:0 18px 40px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:
+      radial-gradient(circle at top, #13274f 0%, #08111f 35%, #050a14 100%);
+      color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;min-height:100%}
+    button,input{font:inherit}
+    .hidden{display:none !important}
+
+    .app{
+      max-width:1200px;
+      margin:0 auto;
+      padding:14px;
+      padding-bottom:100px;
+    }
+
+    .welcome{
+      position:fixed; inset:0; z-index:1000;
+      background:
+        radial-gradient(circle at top, rgba(110,168,255,.18), transparent 30%),
+        linear-gradient(180deg, #07101f 0%, #050a14 100%);
+      display:flex; align-items:center; justify-content:center;
+      padding:24px;
+    }
+    .welcome-card{
+      width:min(920px,100%);
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      backdrop-filter: blur(12px);
+      border-radius:32px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .welcome-top{
+      padding:38px 28px 20px;
+      text-align:center;
+    }
+    .welcome-badge{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 18px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:var(--muted); font-weight:700; font-size:14px;
+    }
+    .welcome h1{
+      margin:22px 0 10px;
+      font-size:clamp(30px,6vw,58px);
+      line-height:1;
+      letter-spacing:-1px;
+    }
+    .gradient-text{
+      background:linear-gradient(90deg,#8cc6ff,#7c9cff,#a78bfa);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .welcome p{
+      max-width:720px; margin:0 auto;
+      color:var(--muted); font-size:16px; line-height:1.55;
+    }
+    .hero-grid{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+      padding:24px 24px 8px;
+    }
+    .hero-card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      border-radius:22px;
+      padding:18px;
+    }
+    .hero-card h3{margin:0 0 8px;font-size:16px}
+    .hero-card p{margin:0;color:var(--muted);font-size:13px}
+    .welcome-actions{
+      display:flex; justify-content:center; gap:12px;
+      padding:24px 24px 30px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none; cursor:pointer;
+      border-radius:16px; padding:14px 20px;
+      font-weight:800; color:white;
+      transition:.18s transform ease,.18s opacity ease,.18s filter ease;
+      box-shadow:var(--shadow);
+    }
+    .btn:hover{transform:translateY(-1px); filter:brightness(1.03)}
+    .btn:active{transform:translateY(0)}
+    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--primary2))}
+    .btn-secondary{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:none;
+    }
+    .btn-danger{background:linear-gradient(90deg,#ff5f6d,#ff7b54)}
+    .btn-success{background:linear-gradient(90deg,#16c784,#00b894)}
+
+    .topbar{
+      position:sticky; top:12px; z-index:50;
+      border:1px solid var(--line);
+      background:rgba(10,16,32,.82);
+      backdrop-filter: blur(14px);
+      border-radius:26px;
+      box-shadow:var(--shadow);
+      margin-bottom:16px;
+      overflow:hidden;
+    }
+    .topbar-row{
+      display:flex; justify-content:space-between; gap:12px;
+      align-items:center; padding:14px 16px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      display:flex; align-items:center; gap:14px;
+    }
+    .brand-logo{
+      width:52px;height:52px;border-radius:18px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg,#162b57,#0e1d3e);
+      border:1px solid var(--line);
+      font-size:24px;
+    }
+    .brand h2{margin:0;font-size:20px}
+    .brand small{color:var(--muted);font-size:12px}
+
+    .status-wrap{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 14px; border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      color:var(--muted); font-size:12px; font-weight:800;
+    }
+    .pill .dot{
+      width:9px;height:9px;border-radius:50%;
+      background:#6b7280;
+    }
+    .pill.success .dot{background:var(--success)}
+    .pill.warning .dot{background:var(--warning)}
+
+    .tabs{
+      display:flex; gap:8px; padding:0 16px 16px;
+      flex-wrap:wrap;
+    }
+    .tab{
+      padding:12px 16px; border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--text); font-weight:800;
+      cursor:pointer;
+    }
+    .tab.active{
+      background:linear-gradient(90deg, rgba(110,168,255,.24), rgba(139,92,246,.22));
+      border-color:rgba(110,168,255,.35);
+    }
+
+    .view{display:none}
+    .view.active{display:block}
+
+    .grid{
+      display:grid; gap:16px;
+    }
+    .grid-2{
+      display:grid; grid-template-columns:1.3fr .7fr; gap:16px;
+    }
+    .grid-3{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .panel-head{
+      display:flex; justify-content:space-between; align-items:center;
+      gap:10px; padding:16px 18px;
+      border-bottom:1px solid var(--line);
+      flex-wrap:wrap;
+      background:rgba(255,255,255,.03);
+    }
+    .panel-head h3{
+      margin:0; font-size:18px; letter-spacing:-.2px;
+    }
+    .panel-body{padding:16px 18px}
+    .hint{color:var(--muted); font-size:13px}
+
+    .stats{
+      display:grid; grid-template-columns:repeat(4,1fr); gap:12px;
+    }
+    .stat{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      border-radius:20px;
+      padding:16px;
+    }
+    .stat strong{
+      display:block; font-size:28px; margin-bottom:6px;
+    }
+    .stat span{color:var(--muted); font-size:12px; font-weight:700}
+
+    .subtabs{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .subtab{
+      padding:10px 14px; border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--text); font-weight:800; cursor:pointer;
+    }
+    .subtab.active{
+      background:linear-gradient(90deg, rgba(110,168,255,.20), rgba(139,92,246,.20));
+      border-color:rgba(110,168,255,.32);
+    }
+
+    .match-list{display:grid; gap:12px}
+    .match{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      border-radius:20px;
+      padding:14px;
+    }
+    .match-meta{
+      display:flex; justify-content:space-between; gap:10px;
+      color:var(--muted); font-size:12px; font-weight:800;
+      margin-bottom:10px;
+    }
+    .match-main{
+      display:grid; grid-template-columns:1fr auto 1fr auto; gap:12px;
+      align-items:center;
+    }
+    .team{
+      display:flex; align-items:center; gap:10px; min-width:0;
+    }
+    .team.right{justify-content:flex-end}
+    .team-badge{
+      width:48px;height:48px;border-radius:16px;
+      display:grid;place-items:center;
+      font-weight:900;
+      background:linear-gradient(135deg,#13274f,#0b1731);
+      border:1px solid var(--line);
+      flex:0 0 auto;
+    }
+    .team-name{
+      font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .vs{
+      font-weight:900; color:var(--muted);
+      padding:0 4px;
+    }
+    .score-box{
+      display:flex; gap:8px; align-items:center;
+    }
+    .score-input{
+      width:72px; height:46px;
+      border-radius:14px; border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text); text-align:center;
+      font-weight:900; font-size:18px;
+      outline:none;
+    }
+    .score-input:focus{
+      border-color:rgba(110,168,255,.45);
+      box-shadow:0 0 0 3px rgba(110,168,255,.12);
+    }
+    .score-input:disabled{
+      opacity:.55; cursor:not-allowed;
+    }
+
+    .table-wrap{overflow:auto}
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:680px;
+    }
+    thead th{
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+      text-align:left;
+      padding:12px 10px;
+      border-bottom:1px solid var(--line);
+    }
+    tbody td{
+      padding:13px 10px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      font-weight:700;
+      font-size:14px;
+    }
+    tbody tr:nth-child(1),
+    tbody tr:nth-child(2){
+      background:rgba(22,199,132,.07);
+    }
+
+    .rank{
+      width:34px; text-align:center;
+      color:var(--muted);
+    }
+    .table-team{
+      display:flex; align-items:center; gap:10px;
+    }
+    .mini-badge{
+      width:34px;height:34px;border-radius:12px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg,#13274f,#0b1731);
+      border:1px solid var(--line);
+      font-size:12px;font-weight:900;
+    }
+
+    .chat{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:rgba(255,255,255,.04);
+      overflow:hidden;
+    }
+    .chat-messages{
+      height:360px; overflow:auto;
+      padding:16px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .msg{
+      max-width:85%;
+      padding:12px 14px;
+      border-radius:18px;
+      font-size:14px;
+      line-height:1.45;
+      border:1px solid var(--line);
+    }
+    .msg.user{
+      align-self:flex-end;
+      background:rgba(110,168,255,.12);
+    }
+    .msg.bot{
+      align-self:flex-start;
+      background:rgba(255,255,255,.05);
+    }
+    .chat-input{
+      display:flex; gap:8px; padding:12px;
+      border-top:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+    .chat-input input{
+      flex:1;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:14px;
+      border-radius:16px;
+      outline:none;
+      font-weight:700;
+    }
+
+    .form{
+      display:grid; gap:12px; max-width:420px;
+    }
+    .field{
+      display:grid; gap:6px;
+    }
+    .field label{
+      font-size:13px; color:var(--muted); font-weight:800;
+    }
+    .field input{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:14px;
+      border-radius:16px;
+      outline:none;
+      font-weight:700;
+    }
+
+    .info-box{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      padding:14px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .footer-note{
+      text-align:center;
+      color:var(--muted);
+      font-size:12px;
+      margin-top:14px;
+    }
+
+    @media (max-width: 980px){
+      .grid-2,.grid-3,.hero-grid,.stats{
+        grid-template-columns:1fr;
+      }
+    }
+    @media (max-width: 760px){
+      .match-main{
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+      .team,.team.right{
+        justify-content:center;
+      }
+      .score-box{justify-content:center}
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome" id="welcomeScreen">
+    <div class="welcome-card">
+      <div class="welcome-top">
+        <div class="welcome-badge">🚀 DOMINATORS CUP RL</div>
+        <h1>Bem-vindo à <span class="gradient-text">Dominators Cup</span></h1>
+        <p>
+          Um painel moderno para acompanhar jogos, tabela automática, área de administradores e um assistente que responde tudo sobre a competição.
+        </p>
+      </div>
+
+      <div class="hero-grid">
+        <div class="hero-card">
+          <h3>📊 Tabela automática</h3>
+          <p>Resultados atualizam classificação, vitórias, derrotas, saldo e pontos sem você calcular nada.</p>
+        </div>
+        <div class="hero-card">
+          <h3>🎮 Jogos organizados</h3>
+          <p>Todos os grupos e jogos separados de forma simples para acompanhar a competição inteira.</p>
+        </div>
+        <div class="hero-card">
+          <h3>🤖 Assistente do campeonato</h3>
+          <p>Pergunte sobre grupos, líderes, próximos jogos e regras da Dominators Cup.</p>
+        </div>
+      </div>
+
+      <div class="welcome-actions">
+        <button class="btn btn-primary" id="startAppBtn">Prosseguir para o app</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-row">
+        <div class="brand">
+          <div class="brand-logo">🏆</div>
+          <div>
+            <h2>Dominators Cup RL</h2>
+            <small>Painel oficial da competição</small>
+          </div>
+        </div>
+
+        <div class="status-wrap">
+          <div class="pill" id="adminStatusPill">
+            <span class="dot"></span>
+            <span id="adminStatusText">Modo público</span>
+          </div>
+          <button class="btn btn-secondary" id="clearScoresBtn">Limpar resultados</button>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-view="jogos">🎮 Jogos</button>
+        <button class="tab" data-view="tabela">📊 Tabela</button>
+        <button class="tab" data-view="assistente">🤖 Assistente</button>
+        <button class="tab" data-view="adm">🔒 ADM</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="view active" id="view-jogos"></section>
+      <section class="view" id="view-tabela"></section>
+      <section class="view" id="view-assistente"></section>
+      <section class="view" id="view-adm"></section>
+    </main>
+
+    <div class="footer-note">
+      Versão PWA pronta para teste. Para sincronizar resultados para todos em tempo real, depois conecte a Firebase/Supabase.
+    </div>
+  </div>
+
+  <script>
+    /* =========================
+       CONFIG
+    ========================= */
+    const MASTER_ADMIN_PASSWORD = "pietro0712";
+    const STORAGE_KEYS = {
+      scores: "dominators_scores_v1",
+      admins: "dominators_admins_v1",
+      session: "dominators_admin_session_v1",
+      welcome: "dominators_welcome_seen_v1"
+    };
+
+    const teams = Array.from({ length: 16 }, (_, i) => ({
+      id: `team_${i + 1}`,
+      name: `Time ${i + 1}`
+    }));
+
+    const groups = {
+      A: teams.slice(0, 4),
+      B: teams.slice(4, 8),
+      C: teams.slice(8, 12),
+      D: teams.slice(12, 16)
+    };
+
+    const roundNames = [
+      { key: "rodada1", label: "Rodada 1" },
+      { key: "rodada2", label: "Rodada 2" },
+      { key: "rodada3", label: "Rodada 3" }
+    ];
+
+    // round-robin simples para 4 times por grupo
+    const groupScheduleTemplate = {
+      rodada1: [[0,1],[2,3]],
+      rodada2: [[0,2],[1,3]],
+      rodada3: [[0,3],[1,2]]
+    };
+
+    function buildMatches() {
+      const all = [];
+      Object.entries(groups).forEach(([groupName, teamList]) => {
+        roundNames.forEach(round => {
+          groupScheduleTemplate[round.key].forEach((pair, index) => {
+            const home = teamList[pair[0]];
+            const away = teamList[pair[1]];
+            all.push({
+              id: `${groupName}_${round.key}_${index + 1}`,
+              group: groupName,
+              round: round.key,
+              roundLabel: round.label,
+              homeId: home.id,
+              awayId: away.id
+            });
+          });
+        });
+      });
+      return all;
+    }
+
+    const matches = buildMatches();
+
+    /* =========================
+       STORAGE
+    ========================= */
+    function load(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function save(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    let scores = load(STORAGE_KEYS.scores, {});
+    let admins = load(STORAGE_KEYS.admins, []);
+    let session = load(STORAGE_KEYS.session, null);
+
+    /* =========================
+       HELPERS
+    ========================= */
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+    function teamById(id) {
+      return teams.find(t => t.id === id);
+    }
+
+    function badgeText(name) {
+      const parts = name.split(" ").filter(Boolean);
+      return (parts[0]?.[0] || "T") + (parts[1]?.[0] || "");
+    }
+
+    function isAdmin() {
+      return !!session;
+    }
+
+    function setSession(user) {
+      session = { user };
+      save(STORAGE_KEYS.session, session);
+      updateAdminUI();
+    }
+
+    function clearSession() {
+      session = null;
+      localStorage.removeItem(STORAGE_KEYS.session);
+      updateAdminUI();
+    }
+
+    function getScore(matchId) {
+      return scores[matchId] || { home: "", away: "" };
+    }
+
+    function setScore(matchId, home, away) {
+      scores[matchId] = { home, away };
+      save(STORAGE_KEYS.scores, scores);
+    }
+
+    function sanitizeNumber(v) {
+      if (v === "" || v === null || v === undefined) return "";
+      const n = parseInt(v, 10);
+      if (!Number.isFinite(n)) return "";
+      if (n < 0) return "0";
+      if (n > 99) return "99";
+      return String(n);
+    }
+
+    function matchPlayed(matchId) {
+      const s = getScore(matchId);
+      return s.home !== "" && s.away !== "";
+    }
+
+    function computeTables() {
+      const tableMap = {};
+
+      Object.entries(groups).forEach(([groupName, teamList]) => {
+        const rows = {};
+        teamList.forEach(team => {
+          rows[team.id] = {
+            teamId: team.id,
+            name: team.name,
+            pts: 0,
+            pj: 0,
+            v: 0,
+            e: 0,
+            d: 0,
+            gm: 0,
+            gs: 0,
+            sg: 0
+          };
+        });
+
+        matches
+          .filter(m => m.group === groupName)
+          .forEach(match => {
+            const score = getScore(match.id);
+            if (score.home === "" || score.away === "") return;
+
+            const home = parseInt(score.home, 10);
+            const away = parseInt(score.away, 10);
+
+            const homeRow = rows[match.homeId];
+            const awayRow = rows[match.awayId];
+
+            homeRow.pj++;
+            awayRow.pj++;
+
+            homeRow.gm += home;
+            homeRow.gs += away;
+            awayRow.gm += away;
+            awayRow.gs += home;
+
+            if (home > away) {
+              homeRow.v++;
+              awayRow.d++;
+              homeRow.pts += 3;
+            } else if (away > home) {
+              awayRow.v++;
+              homeRow.d++;
+              awayRow.pts += 3;
+            } else {
+              homeRow.e++;
+              awayRow.e++;
+              homeRow.pts += 1;
+              awayRow.pts += 1;
+            }
+          });
+
+        Object.values(rows).forEach(row => {
+          row.sg = row.gm - row.gs;
+        });
+
+        tableMap[groupName] = Object.values(rows).sort((a, b) => {
+          if (b.pts !== a.pts) return b.pts - a.pts;
+          if (b.sg !== a.sg) return b.sg - a.sg;
+          if (b.gm !== a.gm) return b.gm - a.gm;
+          return a.name.localeCompare(b.name, "pt-BR");
+        });
+      });
+
+      return tableMap;
+    }
+
+    function totalPlayedMatches() {
+      return matches.filter(m => matchPlayed(m.id)).length;
+    }
+
+    function leaderByGroup(groupName) {
+      const table = computeTables()[groupName];
+      return table?.[0] || null;
+    }
+
+    function nextUnplayedByGroup(groupName) {
+      return matches.find(m => m.group === groupName && !matchPlayed(m.id)) || null;
+    }
+
+    function groupedMatches(groupName, roundKey) {
+      return matches.filter(m => m.group === groupName && m.round === roundKey);
+    }
+
+    /* =========================
+       WELCOME
+    ========================= */
+    function initWelcome() {
+      const seen = load(STORAGE_KEYS.welcome, false);
+      if (seen) {
+        $("#welcomeScreen").classList.add("hidden");
+      }
+      $("#startAppBtn").addEventListener("click", () => {
+        save(STORAGE_KEYS.welcome, true);
+        $("#welcomeScreen").classList.add("hidden");
+      });
+    }
+
+    /* =========================
+       TOPBAR / TABS
+    ========================= */
+    function updateAdminUI() {
+      const pill = $("#adminStatusPill");
+      const text = $("#adminStatusText");
+      const dot = pill.querySelector(".dot");
+
+      pill.classList.remove("success", "warning");
+
+      if (isAdmin()) {
+        pill.classList.add("success");
+        text.textContent = `ADM: ${session.user}`;
+      } else {
+        pill.classList.add("warning");
+        text.textContent = "Modo público";
+      }
+
+      renderCurrentView();
+    }
+
+    $$(".tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        $$(".tab").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const view = btn.dataset.view;
+        $$(".view").forEach(v => v.classList.remove("active"));
+        $(`#view-${view}`).classList.add("active");
+        renderCurrentView();
+      });
+    });
+
+    $("#clearScoresBtn").addEventListener("click", () => {
+      if (!confirm("Tem certeza que deseja limpar todos os resultados deste aparelho?")) return;
+      scores = {};
+      save(STORAGE_KEYS.scores, scores);
+      renderCurrentView();
+    });
+
+    /* =========================
+       RENDER: JOGOS
+    ========================= */
+    let selectedGroup = "A";
+    let selectedRound = "rodada1";
+
+    function renderJogos() {
+      const tableMap = computeTables();
+      const html = `
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Jogos da competição</h3>
+            <div class="hint">Grupo → Rodada • Apenas ADM edita os placares</div>
+          </div>
+          <div class="panel-body">
+            <div class="stats" style="margin-bottom:16px">
+              <div class="stat"><strong>${totalPlayedMatches()}</strong><span>Jogos com placar</span></div>
+              <div class="stat"><strong>${matches.length}</strong><span>Total de jogos</span></div>
+              <div class="stat"><strong>${isAdmin() ? "Sim" : "Não"}</strong><span>Edição liberada</span></div>
+              <div class="stat"><strong>${selectedGroup}</strong><span>Grupo atual</span></div>
+            </div>
+
+            <div class="subtabs" id="groupTabs"></div>
+            <div class="subtabs" id="roundTabs"></div>
+            <div class="match-list" id="matchList"></div>
+          </div>
+        </div>
+      `;
+      $("#view-jogos").innerHTML = html;
+
+      const groupTabs = $("#groupTabs");
+      Object.keys(groups).forEach(groupName => {
+        const btn = document.createElement("button");
+        btn.className = "subtab" + (selectedGroup === groupName ? " active" : "");
+        btn.textContent = `Grupo ${groupName}`;
+        btn.onclick = () => {
+          selectedGroup = groupName;
+          renderJogos();
+        };
+        groupTabs.appendChild(btn);
+      });
+
+      const roundTabs = $("#roundTabs");
+      roundNames.forEach(round => {
+        const btn = document.createElement("button");
+        btn.className = "subtab" + (selectedRound === round.key ? " active" : "");
+        btn.textContent = round.label;
+        btn.onclick = () => {
+          selectedRound = round.key;
+          renderJogos();
+        };
+        roundTabs.appendChild(btn);
+      });
+
+      const list = $("#matchList");
+      groupedMatches(selectedGroup, selectedRound).forEach((match, idx) => {
+        const score = getScore(match.id);
+        const home = teamById(match.homeId);
+        const away = teamById(match.awayId);
+
+        const card = document.createElement("div");
+        card.className = "match";
+        card.innerHTML = `
+          <div class="match-meta">
+            <span>Confronto ${idx + 1}</span>
+            <span>${match.roundLabel} • Grupo ${match.group}</span>
+          </div>
+
+          <div class="match-main">
+            <div class="team">
+              <div class="team-badge">${badgeText(home.name)}</div>
+              <div class="team-name">${home.name}</div>
+            </div>
+
+            <div class="score-box">
+              <input class="score-input" type="number" min="0" max="99" value="${score.home}" data-side="home" ${!isAdmin() ? "disabled" : ""}>
+              <div class="vs">x</div>
+              <input class="score-input" type="number" min="0" max="99" value="${score.away}" data-side="away" ${!isAdmin() ? "disabled" : ""}>
+            </div>
+
+            <div class="team right">
+              <div class="team-name">${away.name}</div>
+              <div class="team-badge">${badgeText(away.name)}</div>
+            </div>
+
+            <div class="pill ${matchPlayed(match.id) ? "success" : ""}">
+              ${matchPlayed(match.id) ? "Resultado lançado" : "Pendente"}
+            </div>
+          </div>
+        `;
+
+        const inputs = card.querySelectorAll(".score-input");
+        inputs.forEach(input => {
+          input.addEventListener("input", () => {
+            if (!isAdmin()) return;
+            const homeVal = sanitizeNumber(inputs[0].value);
+            const awayVal = sanitizeNumber(inputs[1].value);
+            inputs[0].value = homeVal;
+            inputs[1].value = awayVal;
+            setScore(match.id, homeVal, awayVal);
+            renderCurrentView();
+          });
+        });
+
+        list.appendChild(card);
+      });
+
+      const leader = tableMap[selectedGroup]?.[0];
+      if (leader) {
+        const info = document.createElement("div");
+        info.className = "info-box";
+        info.style.marginTop = "14px";
+        info.innerHTML = `<strong>Líder atual do Grupo ${selectedGroup}:</strong> ${leader.name} • ${leader.pts} pts • SG ${leader.sg}`;
+        list.after(info);
+      }
+    }
+
+    /* =========================
+       RENDER: TABELA
+    ========================= */
+    function renderTabela() {
+      const tableMap = computeTables();
+
+      let html = `
+        <div class="grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Classificação automática</h3>
+              <div class="hint">Pontos: 3 vitória • 1 empate • 0 derrota</div>
+            </div>
+            <div class="panel-body">
+              <div class="stats" style="margin-bottom:16px">
+                <div class="stat"><strong>${Object.keys(groups).length}</strong><span>Grupos</span></div>
+                <div class="stat"><strong>${teams.length}</strong><span>Times</span></div>
+                <div class="stat"><strong>${matches.length}</strong><span>Jogos</span></div>
+                <div class="stat"><strong>${totalPlayedMatches()}</strong><span>Jogados</span></div>
+              </div>
+
+              <div class="grid-2">
+      `;
+
+      Object.keys(groups).forEach(groupName => {
+        const rows = tableMap[groupName];
+        html += `
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Grupo ${groupName}</h3>
+              <div class="hint">Atualiza automaticamente</div>
+            </div>
+            <div class="panel-body table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th class="rank">#</th>
+                    <th>Time</th>
+                    <th>P</th>
+                    <th>PJ</th>
+                    <th>V</th>
+                    <th>E</th>
+                    <th>D</th>
+                    <th>GM</th>
+                    <th>GS</th>
+                    <th>SG</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rows.map((row, index) => `
+                    <tr>
+                      <td class="rank">${index + 1}</td>
+                      <td>
+                        <div class="table-team">
+                          <div class="mini-badge">${badgeText(row.name)}</div>
+                          <span>${row.name}</span>
+                        </div>
+                      </td>
+                      <td>${row.pts}</td>
+                      <td>${row.pj}</td>
+                      <td>${row.v}</td>
+                      <td>${row.e}</td>
+                      <td>${row.d}</td>
+                      <td>${row.gm}</td>
+                      <td>${row.gs}</td>
+                      <td>${row.sg}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      $("#view-tabela").innerHTML = html;
+    }
+
+    /* =========================
+       RENDER: ASSISTENTE
+    ========================= */
+    function renderAssistente() {
+      $("#view-assistente").innerHTML = `
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Assistente da Dominators Cup</h3>
+              <div class="hint">Pergunte sobre grupos, líderes, jogos e regras</div>
+            </div>
+            <div class="panel-body">
+              <div class="chat">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                  <input id="chatInput" placeholder="Ex: quem lidera o grupo A?" />
+                  <button class="btn btn-primary" id="sendChatBtn" style="padding:0 18px">Enviar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Exemplos</h3>
+              <div class="hint">Clique e teste</div>
+            </div>
+            <div class="panel-body">
+              <div class="grid">
+                <button class="btn btn-secondary ask-btn">Quem lidera o grupo A?</button>
+                <button class="btn btn-secondary ask-btn">Mostre a tabela do grupo B</button>
+                <button class="btn btn-secondary ask-btn">Quais jogos faltam no grupo C?</button>
+                <button class="btn btn-secondary ask-btn">Quem é admin?</button>
+                <button class="btn btn-secondary ask-btn">Como funciona a pontuação?</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const messages = $("#chatMessages");
+      const input = $("#chatInput");
+      const sendBtn = $("#sendChatBtn");
+
+      function pushMsg(text, type) {
+        const div = document.createElement("div");
+        div.className = `msg ${type}`;
+        div.innerHTML = text;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      pushMsg("Oi! Eu sou o assistente da Dominators Cup RL. Pergunte sobre grupos, classificação, jogos e regras.", "bot");
+
+      function assistantReply(question) {
+        const q = question.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const tables = computeTables();
+
+        if (q.includes("pontuacao") || q.includes("pontuação") || q.includes("regras")) {
+          return "A pontuação está assim: <b>3 pontos por vitória</b>, <b>1 por empate</b> e <b>0 por derrota</b>. A tabela usa pontos, saldo de gols e gols marcados.";
+        }
+
+        if (q.includes("quem e admin") || q.includes("quem é admin") || q.includes("admin")) {
+          return "Hoje o app permite criar administradores com a senha mestra definida. Somente administradores logados podem editar placares.";
+        }
+
+        const groupMatch = q.match(/grupo\s+([a-d])/i);
+        if (groupMatch) {
+          const group = groupMatch[1].toUpperCase();
+
+          if (q.includes("lidera") || q.includes("líder") || q.includes("lider")) {
+            const leader = tables[group][0];
+            return `O líder atual do <b>Grupo ${group}</b> é <b>${leader.name}</b>, com <b>${leader.pts} pontos</b> e saldo <b>${leader.sg}</b>.`;
+          }
+
+          if (q.includes("tabela")) {
+            const rows = tables[group];
+            return `
+              <b>Tabela do Grupo ${group}</b><br>
+              ${rows.map((r, i) => `${i + 1}. ${r.name} — ${r.pts} pts (SG ${r.sg})`).join("<br>")}
+            `;
+          }
+
+          if (q.includes("faltam") || q.includes("faltando") || q.includes("jogos")) {
+            const pendentes = matches
+              .filter(m => m.group === group && !matchPlayed(m.id))
+              .map(m => `${teamById(m.homeId).name} x ${teamById(m.awayId).name} (${m.roundLabel})`);
+
+            if (!pendentes.length) return `Não faltam jogos no <b>Grupo ${group}</b>.`;
+            return `<b>Jogos pendentes do Grupo ${group}</b><br>${pendentes.join("<br>")}`;
+          }
+        }
+
+        if (q.includes("todos os jogos") || q.includes("quantos jogos")) {
+          return `A Dominators Cup tem <b>${matches.length} jogos</b> no modelo atual e <b>${totalPlayedMatches()}</b> já possuem placar lançado.`;
+        }
+
+        return "Ainda não entendi exatamente. Tente algo como: <b>quem lidera o grupo A?</b>, <b>tabela do grupo B</b> ou <b>quais jogos faltam no grupo C?</b>";
+      }
+
+      function sendMessage() {
+        const text = input.value.trim();
+        if (!text) return;
+        pushMsg(text, "user");
+        const reply = assistantReply(text);
+        setTimeout(() => pushMsg(reply, "bot"), 250);
+        input.value = "";
+      }
+
+      sendBtn.addEventListener("click", sendMessage);
+      input.addEventListener("keydown", e => {
+        if (e.key === "Enter") sendMessage();
+      });
+
+      $$(".ask-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          input.value = btn.textContent;
+          sendMessage();
+        });
+      });
+    }
+
+    /* =========================
+       RENDER: ADM
+    ========================= */
+    function renderAdm() {
+      const adminList = admins.length
+        ? admins.map(a => `<li><b>${a.username}</b></li>`).join("")
+        : "<li>Nenhum admin local cadastrado ainda.</li>";
+
+      $("#view-adm").innerHTML = `
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Acesso do administrador</h3>
+              <div class="hint">Somente admins alteram placares</div>
+            </div>
+            <div class="panel-body">
+              ${isAdmin() ? `
+                <div class="info-box" style="margin-bottom:14px">
+                  Você está logado como <b>${session.user}</b>.
+                </div>
+                <button class="btn btn-danger" id="logoutBtn">Sair do modo ADM</button>
+              ` : `
+                <div class="form">
+                  <div class="field">
+                    <label>Usuário</label>
+                    <input id="loginUser" placeholder="Seu usuário" />
+                  </div>
+                  <div class="field">
+                    <label>Senha</label>
+                    <input id="loginPass" type="password" placeholder="Sua senha" />
+                  </div>
+                  <button class="btn btn-primary" id="loginBtn">Entrar</button>
+                </div>
+              `}
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Cadastrar novo admin</h3>
+              <div class="hint">Exige a senha mestra</div>
+            </div>
+            <div class="panel-body">
+              <div class="form">
+                <div class="field">
+                  <label>Novo usuário</label>
+                  <input id="newAdminUser" placeholder="Ex: pietro" />
+                </div>
+                <div class="field">
+                  <label>Nova senha</label>
+                  <input id="newAdminPass" type="password" placeholder="Crie uma senha" />
+                </div>
+                <div class="field">
+                  <label>Senha de cadastro</label>
+                  <input id="masterPass" type="password" placeholder="Senha mestra" />
+                </div>
+                <button class="btn btn-success" id="registerAdminBtn">Cadastrar administrador</button>
+              </div>
+
+              <div class="info-box" style="margin-top:16px">
+                <b>Admins locais cadastrados neste aparelho:</b>
+                <ul>${adminList}</ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const loginBtn = $("#loginBtn");
+      const logoutBtn = $("#logoutBtn");
+      const registerBtn = $("#registerAdminBtn");
+
+      if (loginBtn) {
+        loginBtn.addEventListener("click", () => {
+          const user = $("#loginUser").value.trim();
+          const pass = $("#loginPass").value.trim();
+          const found = admins.find(a => a.username === user && a.password === pass);
+
+          if (!found) {
+            alert("Usuário ou senha inválidos.");
+            return;
+          }
+
+          setSession(user);
+          alert("Login realizado com sucesso.");
+        });
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+          clearSession();
+          alert("Você saiu do modo ADM.");
+        });
+      }
+
+      if (registerBtn) {
+        registerBtn.addEventListener("click", () => {
+          const username = $("#newAdminUser").value.trim();
+          const password = $("#newAdminPass").value.trim();
+          const master = $("#masterPass").value.trim();
+
+          if (!username || !password || !master) {
+            alert("Preencha todos os campos.");
+            return;
+          }
+
+          if (master !== MASTER_ADMIN_PASSWORD) {
+            alert("Senha de cadastro incorreta.");
+            return;
+          }
+
+          if (admins.some(a => a.username.toLowerCase() === username.toLowerCase())) {
+            alert("Esse usuário já existe.");
+            return;
+          }
+
+          admins.push({ username, password });
+          save(STORAGE_KEYS.admins, admins);
+          alert("Administrador cadastrado com sucesso.");
+          renderCurrentView();
+        });
+      }
+    }
+
+    /* =========================
+       RENDER CURRENT VIEW
+    ========================= */
+    function renderCurrentView() {
+      const current = $(".view.active")?.id || "view-jogos";
+
+      if (current === "view-jogos") renderJogos();
+      if (current === "view-tabela") renderTabela();
+      if (current === "view-assistente") renderAssistente();
+      if (current === "view-adm") renderAdm();
+
+      updateAdminStatusPillOnly();
+    }
+
+    function updateAdminStatusPillOnly() {
+      const pill = $("#adminStatusPill");
+      const dot = pill.querySelector(".dot");
+
+      pill.classList.remove("success", "warning");
+
+      if (isAdmin()) {
+        pill.classList.add("success");
+        $("#adminStatusText").textContent = `ADM: ${session.user}`;
+        dot.className = "dot";
+      } else {
+        pill.classList.add("warning");
+        $("#adminStatusText").textContent = "Modo público";
+        dot.className = "dot";
+      }
+    }
+
+    /* =========================
+       INIT
+    ========================= */
+    function initDefaultAdmins() {
+      if (!admins.length) {
+        admins = [
+          { username: "pietro", password: "12345" },
+          { username: "davi", password: "12345" }
+        ];
+        save(STORAGE_KEYS.admins, admins);
+      }
+    }
+
+    initDefaultAdmins();
+    initWelcome();
+    updateAdminStatusPillOnly();
+    renderJogos();
+    renderTabela();
+    renderAssistente();
+    renderAdm();
+  </script>
+</body>
+</html>
